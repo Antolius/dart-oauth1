@@ -43,6 +43,9 @@ class Authorization {
     if (callbackURI == null) {
       callbackURI = 'oob';
     }
+    if (requireConfirmation == null) {
+      requireConfirmation = true;
+    }
     Map additionalParams = {
       'oauth_callback': callbackURI
     };
@@ -72,8 +75,14 @@ class Authorization {
    * Get resource owner authorization URI.
    * http://tools.ietf.org/html/rfc5849#section-2.2
    */
-  String getResourceOwnerAuthorizationURI(String temporaryCredentialsIdentifier) {
-    return _platform.resourceOwnerAuthorizationURI + "?oauth_token=" + Uri.encodeComponent(temporaryCredentialsIdentifier);
+  String getResourceOwnerAuthorizationURI(String temporaryCredentialsIdentifier,
+      { String callbackURI }) {
+    var authURI = _platform.resourceOwnerAuthorizationURI + "?oauth_token=" +
+        Uri.encodeComponent(temporaryCredentialsIdentifier);
+    if (callbackURI != null) {
+      authURI += 'oauth_callback' + Uri.encodeComponent(callbackURI);
+    }
+    return authURI;
   }
 
   /**
