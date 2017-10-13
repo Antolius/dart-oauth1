@@ -1,14 +1,15 @@
 library authorization;
 
 import 'dart:async';
-import 'package:http/http.dart' as http;
-import 'package:formler/formler.dart';
 
-import 'credentials.dart';
-import 'client_credentials.dart';
-import 'platform.dart';
+import 'package:formler/formler.dart';
+import 'package:http/http.dart' as http;
+
 import 'authorization_header_builder.dart';
 import 'authorization_response.dart';
+import 'client_credentials.dart';
+import 'credentials.dart';
+import 'platform.dart';
 
 /**
  * A proxy class describing OAuth 1.0 redirection-based authorization.
@@ -37,7 +38,8 @@ class Authorization {
    *
    * If not callbackURI passed, authentication becomes PIN-based.
    */
-  Future<AuthorizationResponse> requestTemporaryCredentials([String callbackURI]) {
+  Future<AuthorizationResponse> requestTemporaryCredentials(
+      [String callbackURI, bool requireConfirmation]) {
     if (callbackURI == null) {
       callbackURI = 'oob';
     }
@@ -58,7 +60,8 @@ class Authorization {
         throw new StateError(res.body);
       }
       Map<String, String> params = Formler.parseUrlEncoded(res.body);
-      if (params['oauth_callback_confirmed'].toLowerCase() != 'true') {
+      if (requireConfirmation == true &&
+          params['oauth_callback_confirmed'].toLowerCase() != 'true') {
         throw new StateError("oauth_callback_confirmed must be true");
       }
       return new AuthorizationResponse.fromMap(params);
