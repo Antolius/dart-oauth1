@@ -80,7 +80,7 @@ class Authorization {
     var authURI = _platform.resourceOwnerAuthorizationURI + "?oauth_token=" +
         Uri.encodeComponent(temporaryCredentialsIdentifier);
     if (callbackURI != null) {
-      authURI += '&oauth_callback' + Uri.encodeComponent(callbackURI);
+      authURI += '&oauth_callback=' + Uri.encodeComponent(callbackURI);
     }
     return authURI;
   }
